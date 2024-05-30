@@ -1,5 +1,6 @@
 //contains hooks that interact with my api endpoint
 
+import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation } from "react-query";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; //syntax to get environment variables using vite
@@ -10,12 +11,16 @@ type CreateUserRequest = {
 };
 
 //using hooks to call endpoints
-export const useCreateMyUser = () =>{
+export const useCreateMyUser = () => {
+    //fetches token from auth-0 server
+    const { getAccessTokenSilently } = useAuth0();
     const createMyUserRequest = async (user: CreateUserRequest) => {
+        const accessToken = await getAccessTokenSilently();
         const response = await fetch(`${API_BASE_URL}/api/my/user`, {
             //set of options to fetch request
             method: "Post",
             headers: {
+                Authorization: `Bearer ${accessToken}`,
                 "Content-Type": "application/json" //type of request that is being expected in body
             },
             body: JSON.stringify(user),

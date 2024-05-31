@@ -27,6 +27,29 @@ const createCurrentUser = async (req:Request, res:Response) => {
     }
 }
 
+const updateCurrentUser = async (req: Request, res: Response) => {
+    try {
+        //form data
+        const { name, address, country, city } = req.body;
+        //get auth0 id from the token
+        const user = await User.findById(req.userId); //the token which is decoded
+        if (!user) {
+            return res.status(404).json({ message: "User Not found" });
+        }
+        user.name = name;
+        user.address = address;
+        user.city = city;
+        user.country = country;
+
+        await user.save();
+
+        res.send(user); //they can do whatever they want with the properties and easier to check in postman too
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"Error updating user"})
+    }
+}
 export default {
     createCurrentUser,
+    updateCurrentUser
 };

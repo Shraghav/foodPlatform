@@ -4,6 +4,7 @@ import { jwtCheck, jwtParse } from '../Middlewere/auth';
 import { validateMyUserRequest } from '../Middlewere/validation';
 
 const router = express.Router();
+router.get("/",jwtCheck,jwtParse,myUserController.getCurrentUser)
 //when comes from api/my/user and if it is post request, it will use the below
 //athenticated backend endpoint
 // jwtcheck -> based on the  credentials when we create the account

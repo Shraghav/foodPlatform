@@ -2,6 +2,7 @@
 
 import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation } from "react-query";
+import { toast } from "sonner";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; //syntax to get environment variables using vite
 //describe the properties that are needed
@@ -66,7 +67,15 @@ export const useUpdateMyUser = () => {
     }
 
     //passing to useMutation (react quesry can handle the request for us)
-    const { mutateAsync: updateUser, isLoading, isSuccess, isError, error, reset } = useMutation(updateMyUserRequest);
+    const { mutateAsync: updateUser, isLoading, isSuccess, error, reset } = useMutation(updateMyUserRequest);
+
+    if (isSuccess) {
+        toast.success("User profile updated")
+    }
+    if (error) {
+        toast.error(error.toString());
+        reset()//don't want the error display this whenever the component re render
+    }
 
     return {updateUser,isLoading}
 }

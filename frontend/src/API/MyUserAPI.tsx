@@ -36,3 +36,37 @@ export const useCreateMyUser = () => {
     }
     //can call anywhere just by importing
 }
+
+//keeping type separate as certain times we don't want to send all data
+type UpdateMyUserRequest = {
+    name: string;
+    address: string;
+    city: string;
+    country: string
+}
+
+export const useUpdateMyUser = () => {
+    const { getAccessTokenSilently } = useAuth0();
+    //creating fetch request function
+    const updateMyUserRequest = async (formData: UpdateMyUserRequest) => {
+        const accessToken = await getAccessTokenSilently();
+        const response = await fetch(`${API_BASE_URL}/api/my/user`, {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        })
+
+        if (!response.ok) {
+            throw new Error("Failed to update user")
+        }
+        return response.json();
+    }
+
+    //passing to useMutation (react quesry can handle the request for us)
+    const { mutateAsync: updateUser, isLoading, isSuccess, isError, error, reset } = useMutation(updateMyUserRequest);
+
+    return {updateUser,isLoading}
+}

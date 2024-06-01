@@ -6,6 +6,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import LoadingButton from '../../components/loadingButton';
 import { Button } from "@/components/ui/button";
+import { User } from "@/types";
+import { useEffect } from "react";
 //properties that our form has
 const formSchema = z.object({
     email: z.string().optional(), //read only (not for validation)
@@ -20,16 +22,22 @@ type UserFormData = z.infer<typeof formSchema>
 type Props = {
     //can do API stuffs in the page level
     onSave: (userProfileData: UserFormData) => void;
-    isLoading: boolean
+    isLoading: boolean;
+    currentUser : User
 }
 
-const UserProfileForm = ({ isLoading, onSave }: Props) => {
+const UserProfileForm = ({ isLoading, onSave, currentUser }: Props) => {
     //creating forms using react hooks
     //telling type as userform data
     const form = useForm<UserFormData>({
         //to handle validation and stuffs
-        resolver: zodResolver(formSchema)
+        resolver: zodResolver(formSchema),
+        defaultValues: currentUser
     })
+
+    useEffect(() => {
+        form.reset(currentUser);
+    },[currentUser,form])
 
     return (
         //shadcn form

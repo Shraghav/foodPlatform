@@ -3,6 +3,7 @@ import Layout from "./layout/layout";
 import HomePage from "./pages/HomePage";
 import AuthCallBack from "./pages/AuthCallBack";
 import UserProfilePage from "./pages/UserProfilePage";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 const AppRoutes = () => {
     //contains all routes
@@ -15,12 +16,16 @@ const AppRoutes = () => {
                     <HomePage/>
                 </Layout>
             } />
-            <Route path="/auth-callback" element={<AuthCallBack/>}/>
-            <Route path="/user-profile" element={
-                <Layout>
-                    <UserProfilePage/>
-               </Layout>
-            }/>
+            <Route path="/auth-callback" element={<AuthCallBack />} />
+            {/* Outlet component childern */}
+            <Route element={<ProtectedRoute />}>
+                <Route path="/user-profile" element={
+                    <Layout>
+                        <UserProfilePage />
+                    </Layout>
+                } />
+            </Route>
+            
             <Route path="*" element={
                 <Navigate to="/" /> //if the user link is different it will redirect to home page
             }/>

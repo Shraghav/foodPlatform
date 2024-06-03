@@ -9,6 +9,11 @@ mongoose.connect(process.env.mongodb_connection_string as string).then(() => {
 const app = express() // creates appserver
 app.use(express.json()) //add middleware converts body of the request to  json
 app.use(cors())
+
+//health
+app.get("/health", async (req: Request, res: Response) => {
+  res.send({ messsage: "health Okay" }); //simply to check if the server is started
+})
 //parsing to myuserroute
 app.use("/api/my/user", myUserRoutes);
 

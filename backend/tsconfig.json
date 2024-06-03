@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "./dist", // contains all code for dsitribution
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
     /* Projects */

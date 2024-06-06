@@ -20,3 +20,17 @@ export const validateMyUserRequest = [
 ]
 
 //keeps out of business logic
+
+export const validateMyRestaurantRequest = [
+    body("restaurantName").notEmpty().withMessage("Restaurant name is needed"),
+    body("city").notEmpty().withMessage("City name is needed"),
+    body("country").notEmpty().withMessage("Country name is needed"),
+    body("deliveryPrice").isFloat({min:0}).withMessage("DeliveryPrice must be positive"),
+    body("estimatedDeliveryTime").isInt({ min: 0 }).withMessage("Estimated delivery time  must be positive"),
+    body("cuisines").isArray().withMessage("Cuisines must be an array").not().isEmpty().withMessage("Cuisines array cannot be empty"),
+    body("menuItems").isArray().withMessage("Menu items must be an array"),
+    body("menuItems.*.name").notEmpty().withMessage("Menu item name is required"),
+    body("menuItems.*.price").isFloat({ min: 0 }).withMessage("Menu item price is required and must be a positive number"),
+    handleValidationError
+    
+]

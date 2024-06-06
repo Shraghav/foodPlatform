@@ -3,6 +3,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import DetailsSection from "./DetailsSection";
+import { Separator } from "@/components/ui/separator";
+import CuisineSection from "./CuisineSection";
 
 const formSchema = z.object({
     //form properties and types
@@ -58,6 +60,8 @@ const ManageRestaurantForm = ({onSave, isLoading}: Props) => {
             <form onSubmit={form.handleSubmit(onSubmit)} 
             className="space-y-8 bg-gray-50 p-10 rounded-lg">
                 <DetailsSection />
+                <Separator />
+                <CuisineSection />
             </form>
         </Form>
     )

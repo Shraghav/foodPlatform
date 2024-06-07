@@ -5,6 +5,7 @@ import { z } from "zod";
 import DetailsSection from "./DetailsSection";
 import { Separator } from "@/components/ui/separator";
 import CuisineSection from "./CuisineSection";
+import MenuSection from "./MenuSection";
 
 const formSchema = z.object({
     //form properties and types
@@ -62,6 +63,8 @@ const ManageRestaurantForm = ({onSave, isLoading}: Props) => {
                 <DetailsSection />
                 <Separator />
                 <CuisineSection />
+                <Separator />
+                <MenuSection/>
             </form>
         </Form>
     )

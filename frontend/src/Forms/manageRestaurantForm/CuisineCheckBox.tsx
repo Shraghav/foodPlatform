@@ -24,7 +24,7 @@ const CuisineCheckBox = ({ cuisine, field }: Props) => {
                         }
                         else {
                             //remving the current cuisine
-                            field.onChange(field.value.filter((value:string)=> value!==cuisine))
+                            field.onChange(field.value.filter((value:string)=> value !== cuisine))
                         }
                     }}
                 />

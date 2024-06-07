@@ -23,7 +23,7 @@ const formSchema = z.object({
     }),
     deliveryPrice: z.coerce.number({
         required_error: "delivery price name is required",
-        invalid_type_error : "must be a valid number",
+        invalid_type_error: "must be a valid number",
     }),
     estimatedDeliveryTime: z.string({
         required_error: "estimated delivery time is required",
@@ -33,36 +33,59 @@ const formSchema = z.object({
     }),
     menuItems: z.array(z.object({
         name: z.string().min(1, "name is required"),
-        price: z.coerce.number().min(1,"price is required")
+        price: z.coerce.number().min(1, "price is required")
     })),
-    imageFile : z.instanceof(File, {message: "message is required"})
+    imageFile: z.instanceof(File, { message: "message is required" })
 })
 
 type restaurantFormData = z.infer<typeof formSchema> //creating a type based on the property we specified
 
 type Props = {
     //at page level we will pass in function that calls createmy restauran 
-    onSave: (restaurantFormData: FormData) => void; 
+    onSave: (restaurantFormData: FormData) => void;
     isLoading: boolean;
 }
 
 //managing by react hook form and validated by zod
-const ManageRestaurantForm = ({onSave, isLoading}: Props) => {
+const ManageRestaurantForm = ({ onSave, isLoading }: Props) => {
     const form = useForm<restaurantFormData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             cuisines: [],
-            menuItems :[{name: "", price: 0}]
+            menuItems: [{ name: "", price: 0 }]
         }
     })
     //submit validated form data
     const onSubmit = (formDataJson: restaurantFormData) => {
         // todo -> form data json to form data object
-    }
+        const formData = new FormData(); //builtin
+        //http request only deal with strings
+        formData.append("restaurantName", formDataJson.restaurantName);
+        formData.append("city", formDataJson.city);
+        formData.append("country", formDataJson.country);
+        //easier to send values to stripe
+        formData.append("deliveryPrice", (formDataJson.deliveryPrice * 100).toString());
+        formData.append("estimatedDeliveryTime", formDataJson.estimatedDeliveryTime.toString());
+
+        formDataJson.cuisines.forEach((cuisine, index) => {
+            formData.append(`cuisines[${index}]`, cuisine);
+        });
+        formDataJson.menuItems.forEach((menuItem, index) => {
+            formData.append(`menuItems[${index}][name]`, menuItem.name)
+            //lowest denomination
+            formData.append(`menuItems[${index}][price]`, (menuItem.price * 100).toString())
+        })
+        if (formDataJson.imageFile) {
+            formData.append('imageFile', formDataJson.imageFile);           
+        }
+
+        onSave(formData); //check props as when it is being on save it should also contain restauramt form data
+    };
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} 
-            className="space-y-8 bg-gray-50 p-10 rounded-lg">
+            <form onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-8 bg-gray-50 p-10 rounded-lg"
+            >
                 <DetailsSection />
                 <Separator />
                 <CuisineSection />
@@ -70,8 +93,7 @@ const ManageRestaurantForm = ({onSave, isLoading}: Props) => {
                 <MenuSection />
                 <Separator />
                 <ImageSection />
-
-                {isLoading? <LoadingButton /> : <Button type="submit">Submit</Button>}
+                {isLoading ? <LoadingButton /> : <Button type="submit">Submit</Button>}
             </form>
         </Form>
     )

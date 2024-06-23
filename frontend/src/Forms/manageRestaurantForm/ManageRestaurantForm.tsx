@@ -38,7 +38,7 @@ const formSchema = z.object({
     imageFile: z.instanceof(File, { message: "message is required" })
 })
 
-type restaurantFormData = z.infer<typeof formSchema> //creating a type based on the property we specified
+type RestaurantFormData = z.infer<typeof formSchema> //creating a type based on the property we specified
 
 type Props = {
     //at page level we will pass in function that calls createmy restauran 
@@ -48,7 +48,7 @@ type Props = {
 
 //managing by react hook form and validated by zod
 const ManageRestaurantForm = ({ onSave, isLoading }: Props) => {
-    const form = useForm<restaurantFormData>({
+    const form = useForm<RestaurantFormData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             cuisines: [],
@@ -56,7 +56,7 @@ const ManageRestaurantForm = ({ onSave, isLoading }: Props) => {
         }
     })
     //submit validated form data
-    const onSubmit = (formDataJson: restaurantFormData) => {
+    const onSub = (formDataJson: RestaurantFormData) => {
         // todo -> form data json to form data object
         const formData = new FormData(); //builtin
         //http request only deal with strings
@@ -73,17 +73,19 @@ const ManageRestaurantForm = ({ onSave, isLoading }: Props) => {
         formDataJson.menuItems.forEach((menuItem, index) => {
             formData.append(`menuItems[${index}][name]`, menuItem.name)
             //lowest denomination
-            formData.append(`menuItems[${index}][price]`, (menuItem.price * 100).toString())
+            formData.append(
+                `menuItems[${index}][price]`,
+                (menuItem.price * 100).toString())
         })
         if (formDataJson.imageFile) {
-            formData.append('imageFile', formDataJson.imageFile);           
+            formData.append('imageFile', formDataJson.imageFile);
         }
 
         onSave(formData); //check props as when it is being on save it should also contain restauramt form data
     };
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}
+            <form onSubmit={form.handleSubmit(onSub)}
                 className="space-y-8 bg-gray-50 p-10 rounded-lg"
             >
                 <DetailsSection />

@@ -12,6 +12,7 @@ export const useGetMyUser = () => {
 
     const getMyUserRequest = async ():Promise<User> => { //returning type
         const accessToken = await getAccessTokenSilently();
+        
         const response = await fetch(`${API_BASE_URL}/api/my/user`, {
             method: "GET",
             headers: {
@@ -47,7 +48,7 @@ export const useCreateMyUser = () => {
         const accessToken = await getAccessTokenSilently();
         const response = await fetch(`${API_BASE_URL}/api/my/user`, {
             //set of options to fetch request
-            method: "Post",
+            method: "POST",
             headers: {
                 Authorization: `Bearer ${accessToken}`,
                 "Content-Type": "application/json" //type of request that is being expected in body

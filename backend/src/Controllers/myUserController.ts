@@ -19,9 +19,8 @@ const createCurrentUser = async (req:Request, res:Response) => {
         // returning the object after everything
         res.status(201).json(newUser.toObject())
     }
-    
     catch (error) {
-        console.log(error);
+        console.log("Wrong :",error);
         //don't send the above error to front end as  it might contain sensitive info
         res.status(500).json({message: "Error Creating the user"})
     }
@@ -63,7 +62,7 @@ const getCurrentUser = async (req:Request,res:Response) => {
     }
 }
 export default {
-    createCurrentUser,
-    updateCurrentUser,
-    getCurrentUser
+    createCurrentUser
+    // updateCurrentUser,
+    // getCurrentUser
 };

@@ -17,14 +17,14 @@ declare global{
 export const jwtCheck = auth({
   audience: process.env.AUTH0_AUDIENCE,
   issuerBaseURL: process.env.AUTH0_ISSUE_BASE_URL,
-  tokenSigningAlg: "RS256",
+  tokenSigningAlg: 'RS256',
 });
 
 export const jwtParse = async (req:Request,res:Response,next:NextFunction) => {
   //get access token from authorization header
   const { authorization } = req.headers;
 
-  if (!authorization || !authorization.startsWith("Bearer ")) {
+  if (!authorization || !authorization.startsWith("Bearer")) {
     return res.sendStatus(401);
   }
   const token = authorization.split(" ")[1];
